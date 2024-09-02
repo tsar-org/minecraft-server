@@ -1,0 +1,46 @@
+# https://taskfile.dev/
+version: "3"
+
+vars:
+  MINECRAFT_CONTAINER_NAME: minecraft
+
+tasks:
+  sethook:
+    cmds:
+      - pre-commit install
+
+  unsethook:
+    cmds:
+      - pre-commit uninstall
+
+  install:
+    deps:
+      - sethook
+    cmds:
+      - docker-compose up -d --build
+
+  up:
+    cmds:
+      - docker-compose up -d
+      - task: run
+
+  down:
+    cmds:
+      - docker-compose down
+
+  destroy:
+    cmds:
+      - docker-compose down -v
+      - task unsethook
+
+  sh:
+    cmds:
+      - docker-compose exec {{.MINECRAFT_CONTAINER_NAME}} sh
+
+  reinstall:
+    dir: .
+    aliases: [re]
+    cmds:
+      - task: down
+      - task: destroy
+      - task: install
