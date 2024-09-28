@@ -22,7 +22,6 @@ tasks:
   up:
     cmds:
       - docker-compose up -d
-      - task: run
 
   down:
     cmds:
